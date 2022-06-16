@@ -1,0 +1,71 @@
+﻿@model RequestIndexModel
+@{ ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<br />
+<div class="container row p-0 m-0">
+    <div class="col-6">
+        <h2 class="text-info">Request Lists</h2>
+    </div>
+    <div class="col-3 offset-3">
+        @if (!Model.IsAdmin)
+        {
+        <a asp-action="AddOrEdit" asp-controller="Request" class="btn btn-info form-control text-white">
+            <i class="fa fa-plus" aria-hidden="true"></i> New Request
+        </a>
+        }
+                </div>
+    <div class="col-12 border p-3">
+        @if (ViewBag.Message != null)
+        {
+<div class="alert alert-success alert-dismissible" style="margin-top:20px">
+    @ViewBag.Message
+</div>}
+        @if (Model.Requests.Count == 0)
+        {
+<h2>No Records Found</h2> }
+            else
+            {
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Details</th>
+            <th>Notes</th>
+            <th>Created On</th>
+            <th>Created By</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var request in Model.Requests)
+        {
+        <tr>
+            <th>@request.Id</th>
+            <td>@request.Title</td>
+            <td>@request.Details</td>
+            <td>@request.Notes</td>
+            <td>@request.CreatedOnLoc.ToString("dd/MM/yyyy HH:mm")</td>
+            <td>@request.User.UserName</td>
+            <td>@request.RequestStatus.ToString()</td>
+            <td>
+                <a type="button" class="btn btn-secondary" asp-controller="Request" asp-action="ViewOrApprove" asp-route-id="@request.Id">
+                    <i class="fa fa-bars" aria-hidden="true"></i>
+                </a>
+                <a type="button" class="btn btn-secondary" asp-controller="Request" asp-action="ViewHistory" asp-route-id="@request.Id">
+                    <i class="fa fa-history" aria-hidden="true"></i>
+                </a>
+                @if (!Model.IsAdmin && (@request.Status == 1 || @request.Status == 3))
+                {
+        <a type="button" class="btn btn-primary" asp-controller="Request" asp-action="AddOrEdit" asp-route-id="@request.Id">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+        </a>}
+
+            </td>
+        </tr>                }
+    </tbody>
+</table>}
+    </div>
+</div>

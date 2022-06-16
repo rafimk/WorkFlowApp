@@ -1,0 +1,133 @@
+﻿@model RequestViewOrApproveModel
+
+<br />
+<h2 class="text-info">View / Approval Request</h2>
+<br />
+
+<div class="border container" style="padding:30px;">
+    <form method="post" enctype="multipart/form-data">
+        @if (Model.Request.Id != 0)
+        {
+            <input type="hidden" asp-for="Request.Id" />
+        }
+        @if (ViewBag.Message != null)
+        {
+            <div class="alert alert-danger alert-dismissible" style="margin-top:20px">
+                @ViewBag.Message
+            </div>
+        }
+        <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+        <div class="form-group row">
+            <div class="col-3">
+                <label asp-for="Request.Title"></label>
+            </div>
+            <div class="col-6">
+                <input asp-for="Request.Title" class="form-control" disabled="disabled" />
+                <span asp-validation-for="Request.Title" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-3">
+                <label asp-for="Request.Details"></label>
+            </div>
+            <div class="col-6">
+                <textarea asp-for="Request.Details" class="form-control" rows="2" cols="50" disabled="disabled"></textarea>
+                <span asp-validation-for="Request.Details" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-3">
+                <label asp-for="Request.Notes"></label>
+            </div>
+            <div class="col-6">
+                <textarea asp-for="Request.Notes" class="form-control" rows="2" cols="50" disabled="disabled"></textarea>
+                <span asp-validation-for="Request.Notes" class="text-danger"></span>
+            </div>
+        </div>
+        @if (Model.Request.Attachments?.Count > 0)
+        {
+            <div class="form-group row">
+                <div class="col-3">
+                    Attachments
+                </div>
+                <div class="col-6">
+                    @foreach (var attachment in Model.Request.Attachments)
+                    {
+                        <ul class="list-group">
+                            <li class="list-group-item">@attachment.Name@attachment.Extension</li>
+                        </ul>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (Model.IsAdmin && Model.Request.Status == 2)
+        {
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="Reason"></label>
+                </div>
+                <div class="col-6">
+                    <textarea asp-for="Reason" class="form-control" rows="2" cols="50"></textarea>
+                    <span asp-validation-for="Reason" class="text-danger"></span>
+                </div>
+            </div>
+        }
+        else if (Model.Request.Status == 1 || Model.Request.Status == 3)
+        {
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="Reason"></label>
+                </div>
+                <div class="col-6">
+                    <textarea asp-for="Reason" class="form-control" rows="2" cols="50"></textarea>
+                    <span asp-validation-for="Reason" class="text-danger"></span>
+                </div>
+            </div>
+        }
+
+        <div class="form-group row">
+            <div class="col-3">
+                @if (Model.IsAdmin && Model.Request.Status == 2)
+                {
+                    <button type="submit" class="btn btn-primary form-control" formnovalidate name="submitButton" value="approved">
+                        Approve
+                    </button>
+                }
+                else if (Model.Request.Status == 1 || Model.Request.Status == 3)
+                {
+                    <button type="submit" class="btn btn-primary form-control" formnovalidate name="submitButton" value="approved">
+                        Submit for Approval
+                    </button>
+                }
+            </div>
+
+            @if (Model.IsAdmin && Model.Request.Status == 2)
+            {
+                <div class="col-2">
+                    <button type="submit" class="btn btn-danger form-control" name="submitButton" value="rejected">
+                        Reject
+                    </button>
+                </div>
+            }
+
+
+            @if (Model.IsAdmin && Model.Request.Status == 2)
+            {
+                <div class="col-2">
+                    <button type="submit" class="btn btn-secondary form-control" name="submitButton" value="returned">
+                        Return
+                    </button>
+                </div>
+            }
+
+            <div class="col-2">
+                <a asp-action="Index" class="btn btn-success form-control"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

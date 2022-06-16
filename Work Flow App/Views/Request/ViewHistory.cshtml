@@ -1,0 +1,42 @@
+﻿@model ViewHistoryModel
+@{ ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<br />
+<div class="container row p-0 m-0">
+    <div class="col-6">
+        <h2 class="text-info">Request Lists</h2>
+    </div>
+
+    @if (Model.RequestWorkFlow.Count == 0)
+    {
+<h2>No Records Found</h2> }
+            else
+            {
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Action Date</th>
+            <th>Action By</th>
+            <th>Reason</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var workFlow in Model.RequestWorkFlow)
+        {
+<tr>
+    <td>@workFlow.ActionDateLoc.ToString("dd/MM/yyyy HH:mm")</td>
+    <td>@workFlow.User.UserName</td>
+    <td>@workFlow.Reason</td>
+    <td>@workFlow.ActionStatus.ToString()</td>
+</tr>}
+    </tbody>
+</table>}
+    <div class="col-3">
+        <a asp-action="Index" class="btn btn-success form-control">
+            <i class="fa fa-arrow-left" aria-hidden="true"></i> Back to List
+        </a>
+    </div>
+</div>
+
